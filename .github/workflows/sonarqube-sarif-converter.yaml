@@ -12,6 +12,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1
+
+      - name: Install SARIF converter tool
+        run: dotnet tool install -g Microsoft.CodeAnalysis.Sarif.Tool
 
       - name: Fetch issues from SonarQube
         env:
@@ -22,24 +30,10 @@ jobs:
           # Call the SonarQube API to fetch issues
           curl -sSL \
             -u "${SONAR_TOKEN}:" \
-            "${SONAR_HOST_URL}/api/issues/search?projectKeys=${PROJECT_KEY}&branch=main&statuses=OPEN&ps=500" \
+            "${SONAR_HOST_URL}/api/issues/search?projectKeys=ChristopheH-SonarQube-Projects_Code-Scanning-Alerts_AYaYMRaEn5oq5r03wj5i&branch=main&statuses=OPEN&ps=500" \
             | jq '.issues' \
             > issues.json
   
-  convert-to-sarif:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1
-
-      - name: Install SARIF converter tool
-        run: dotnet tool install -g Microsoft.CodeAnalysis.Sarif.Tool
-
       - name: Convert SonarQube issues to SARIF format
         run: dotnet-sarif-converter convert -t sonarqube -o issues.sarif issues.json
         working-directory: ${{ github.workspace }}
@@ -48,4 +42,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: issues.sarif
+
+      
+      
 
