@@ -13,11 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3.6.0
 
-      - name: Install SARIF converter tool
-        run: dotnet tool install -g Microsoft.CodeAnalysis.Sarif.Tool
+      - name: Install dependencies
+        run: npm install
 
       - name: Fetch issues from SonarQube
         env:
@@ -33,8 +33,7 @@ jobs:
             > issues.json
   
       - name: Convert SonarQube issues to SARIF format
-        run: dotnet-sarif-converter convert -t sonarqube -o issues.sarif issues.json
-        working-directory: ${{ github.workspace }}
+        run: node convert-to-sarif.js issues.json > issues.sarif
 
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v1
