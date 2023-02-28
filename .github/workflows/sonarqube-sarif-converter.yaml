@@ -1,0 +1,49 @@
+name: SonarQube Fetch Issues
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch issues from SonarQube
+        env:
+          SONAR_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_API_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          # Call the SonarQube API to fetch issues
+          curl -sSL \
+            -u "${SONAR_TOKEN}:" \
+            "${SONAR_HOST_URL}/api/issues/search?projectKeys=<your-project-key>&branch=main&statuses=OPEN&ps=500" \
+            | jq '.issues' \
+            > issues.json
+  
+  convert-to-sarif:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1
+
+      - name: Install SARIF converter tool
+        run: dotnet tool install -g Microsoft.CodeAnalysis.Sarif.Tool
+
+      - name: Convert SonarQube issues to SARIF format
+        run: dotnet-sarif-converter convert -t sonarqube -o issues.sarif issues.json
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload SARIF file to GitHub
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: issues.sarif
+
