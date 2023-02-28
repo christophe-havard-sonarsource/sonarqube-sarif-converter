@@ -21,8 +21,8 @@ jobs:
 
       - name: Fetch issues from SonarQube
         env:
-          SONAR_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_API_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           PROJECT_KEY: "ChristopheH-SonarQube-Projects_Code-Scanning-Alerts_AYaYMRaEn5oq5r03wj5i"
         run: |
           # Call the SonarQube API to fetch issues
