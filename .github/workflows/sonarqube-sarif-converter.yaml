@@ -13,10 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
 
       - name: Install SARIF converter tool
         run: dotnet tool install -g Microsoft.CodeAnalysis.Sarif.Tool
