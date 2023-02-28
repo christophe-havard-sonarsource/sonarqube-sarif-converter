@@ -36,7 +36,7 @@ jobs:
         run: ls -al
   
       - name: Convert SonarQube issues to SARIF format
-        run: node convert-to-sarif.js issues.json > issues.sarif
+        run: node ./convert-to-sarif.js issues.json > issues.sarif
         env:
           ISSUES_JSON: ${{ steps.fetch-issues.outputs.issues }}
 
