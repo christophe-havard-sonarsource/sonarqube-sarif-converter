@@ -1,4 +1,5 @@
 
+console.log("salut");
 const fs = require('fs');
 const issues = JSON.parse(process.env.ISSUES_JSON);
 
