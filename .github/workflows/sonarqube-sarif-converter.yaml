@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   fetch-issues:
@@ -16,11 +17,12 @@ jobs:
         env:
           SONAR_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_API_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PROJECT_KEY: "ChristopheH-SonarQube-Projects_Code-Scanning-Alerts_AYaYMRaEn5oq5r03wj5i"
         run: |
           # Call the SonarQube API to fetch issues
           curl -sSL \
             -u "${SONAR_TOKEN}:" \
-            "${SONAR_HOST_URL}/api/issues/search?projectKeys=<your-project-key>&branch=main&statuses=OPEN&ps=500" \
+            "${SONAR_HOST_URL}/api/issues/search?projectKeys=${PROJECT_KEY}&branch=main&statuses=OPEN&ps=500" \
             | jq '.issues' \
             > issues.json
   
