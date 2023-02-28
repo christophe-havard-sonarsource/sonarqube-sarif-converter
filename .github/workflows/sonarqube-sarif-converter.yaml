@@ -32,6 +32,9 @@ jobs:
             | jq '.issues' \
             > issues.json
   
+      - name: List directory contents
+        run: ls -al
+  
       - name: Convert SonarQube issues to SARIF format
         run: node convert-to-sarif.js issues.json > issues.sarif
         env:
