@@ -9,6 +9,8 @@ on:
 jobs:
   fetch-issues:
     runs-on: ubuntu-latest
+    outputs:
+      o1: ${{ steps.fetch.outputs }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -20,6 +22,7 @@ jobs:
         run: npm install
 
       - name: Fetch issues from SonarQube
+        id: fetch
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -30,7 +33,7 @@ jobs:
             -u "${SONAR_TOKEN}:" \
             "${SONAR_HOST_URL}/api/issues/search?projectKeys=ChristopheH-SonarQube-Projects_Code-Scanning-Alerts_AYaYMRaEn5oq5r03wj5i&branch=main&statuses=OPEN&ps=500" \
             | jq '.issues' \
-            > issues.json
+            >> $GITHUB_OUTPUT
   
       - name: List directory contents
         run: ls -al
@@ -38,7 +41,7 @@ jobs:
       - name: Convert SonarQube issues to SARIF format
         run: node convert-issues-to-sarif.js issues.json > issues.sarif
         env:
-          ISSUES_JSON: ${{ steps.fetch-issues.outputs.issues }}
+          ISSUES_JSON: ${{ steps.fetchissues.outputs.issues }}
 
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v1
