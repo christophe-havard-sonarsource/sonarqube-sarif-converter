@@ -1,8 +1,6 @@
-const jsonFile = require('./issues.json');
 
 const fs = require('fs');
-
-const issues = JSON.parse(jsonFile);
+const issues = JSON.parse(process.env.ISSUES_JSON);
 
 const sarifIssues = issues.issues.map((issue) => {
   const ruleId = issue.rule;
