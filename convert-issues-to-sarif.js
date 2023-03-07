@@ -2,6 +2,7 @@
 console.log("salut");
 const fs = require('fs');
 const issues = JSON.parse(process.env.ISSUES_JSON);
+console.log(issues);
 
 const sarifIssues = issues.issues.map((issue) => {
   const ruleId = issue.rule;
