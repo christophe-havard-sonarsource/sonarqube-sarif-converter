@@ -34,7 +34,7 @@ jobs:
             >> $GITHUB_OUTPUT
   
       - name: List directory contents
-        run: ls -al
+        run: cat issues.json
   
       - name: Convert SonarQube issues to SARIF format
         run: node convert-issues-to-sarif.js issues.json > issues.sarif
