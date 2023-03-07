@@ -9,7 +9,6 @@ on:
 jobs:
   fetch-issues:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,7 +39,7 @@ jobs:
       - name: Convert SonarQube issues to SARIF format
         run: node convert-issues-to-sarif.js issues.json > issues.sarif
         env:
-          ISSUES_JSON: "{toto: 'titi'}"
+          ISSUES_JSON: 'toto'
 
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v1
