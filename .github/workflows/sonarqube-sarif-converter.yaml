@@ -10,7 +10,7 @@ jobs:
   fetch-issues:
     runs-on: ubuntu-latest
     outputs:
-      o1: ${{ steps.fetch.outputs }}
+      o1: ${{ steps.fetch.outputs.$GITHUB_OUTPUT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
